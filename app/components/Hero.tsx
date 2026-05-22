@@ -137,7 +137,7 @@ export default function Hero() {
 
                 {/* CTAs */}
                 <div className={styles.ctaRow}>
-                  <Link href="/platform" className={styles.btnGhost}>
+                  <Link href="/about" className={styles.btnGhost}>
                     Explore the Platform <ArrowIcon />
                   </Link>
                   <Link href="/request-demo" className={styles.btnPrimary}>

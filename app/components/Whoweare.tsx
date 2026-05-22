@@ -46,14 +46,10 @@ function BarChart() {
         <svg viewBox={`0 0 ${W} ${CH}`} width="100%" height="100%" preserveAspectRatio="none">
             {barData.map((v, i) => {
                 const h = (v / max) * CH;
-                const isTop = v === max;
                 return (
-                    <rect
-                        key={i}
-                        x={i * (BW + GAP)} y={CH - h}
+                    <rect key={i} x={i * (BW + GAP)} y={CH - h}
                         width={BW} height={h} rx="3"
-                        fill={isTop ? "#5B2D8E" : "#ddd6fe"}
-                    />
+                        fill={v === max ? "#5B2D8E" : "#ddd6fe"} />
                 );
             })}
         </svg>
@@ -127,6 +123,8 @@ const IC = {
     logout: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>,
     search: <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>,
     bell: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>,
+    menu: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>,
+    close: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>,
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -135,77 +133,73 @@ const IC = {
 
 function FMDashboard() {
     const [activeTab, setActiveTab] = useState("All Tasks");
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const rows = activeTab === "All Tasks" ? allRows : allRows.filter(r => r.status === activeTab);
 
     return (
         <div
-            className="w-full flex rounded-2xl overflow-hidden border border-gray-100"
+            className="w-full flex rounded-2xl overflow-hidden border border-gray-100 relative"
             style={{ boxShadow: "0 12px 48px rgba(0,0,0,0.10)", fontFamily: "var(--font-dm-sans,'DM Sans',sans-serif)" }}
         >
 
-            {/* ── Sidebar ─────────────────────────────────────── */}
-            <div className="w-[118px] shrink-0 bg-white border-r border-gray-100 flex flex-col justify-between py-3 px-2">
+            {/* ── Mobile sidebar overlay ────────────────────────── */}
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/30 z-40 md:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
 
-                {/* Logo */}
-                <div>
-                    <div className="flex items-center gap-1.5 px-2 mb-4">
-                        <div className="w-6 h-6 rounded-lg bg-[#5B2D8E] flex items-center justify-center">
-                            <span className="text-white text-[9px] font-black">FE</span>
-                        </div>
-                        <span className="text-[11px] font-black text-gray-800 tracking-tight">FusionEdge</span>
-                    </div>
+            {/* ── Sidebar ─────────────────────────────────────────
+           • Desktop (md+): always visible, fixed 118px column
+           • Mobile: slides in as an overlay drawer
+      ─────────────────────────────────────────────────────── */}
+            <div className={`
+        shrink-0 bg-white border-r border-gray-100 flex flex-col justify-between py-3 px-2
+        /* desktop */
+        hidden md:flex w-[118px]
+      `}>
+                <SidebarContent />
+            </div>
 
-                    {/* Store pill */}
-                    <div className="mx-1 mb-3 flex items-center gap-1.5 bg-gray-50 rounded-lg px-2 py-1.5 border border-gray-100">
-                        <div className="w-4 h-4 rounded bg-[#1fa279] flex items-center justify-center">
-                            <span className="text-white text-[7px] font-bold">C</span>
-                        </div>
-                        <span className="text-[9px] font-semibold text-gray-700 flex-1 truncate">Capstone</span>
-                        <span className="text-gray-300 text-[8px]">▾</span>
-                    </div>
-
-                    <p className="text-[8px] font-bold uppercase tracking-widest text-gray-300 px-2 mb-1">General</p>
-                    <NavItem icon={IC.dashboard} label="Dashboard" active />
-                    <NavItem icon={IC.assets} label="Assets" />
-                    <NavItem icon={IC.tickets} label="Tickets" badge={5} />
-                    <NavItem icon={IC.compliance} label="Compliance" />
-                    <NavItem icon={IC.esg} label="ESG" />
-
-                    <div className="my-2 mx-2 h-px bg-gray-100" />
-                    <p className="text-[8px] font-bold uppercase tracking-widest text-gray-300 px-2 mb-1">Tools</p>
-                    <NavItem icon={IC.esg} label="Analytics" />
-                    <NavItem icon={IC.messages} label="Messages" badge={2} />
-                    <NavItem icon={IC.settings} label="Settings" />
+            {/* Mobile drawer */}
+            <div className={`
+        fixed top-0 left-0 h-full w-[160px] bg-white border-r border-gray-100
+        flex flex-col justify-between py-3 px-2 z-50
+        transition-transform duration-200 ease-in-out
+        md:hidden
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+      `}>
+                <div className="flex justify-end mb-2 px-1">
+                    <button onClick={() => setSidebarOpen(false)} className="text-gray-400 hover:text-gray-600">
+                        {IC.close}
+                    </button>
                 </div>
-
-                {/* User */}
-                <div>
-                    <div className="my-2 mx-2 h-px bg-gray-100" />
-                    <NavItem icon={IC.logout} label="Log out" />
-                    <div className="flex items-center gap-1.5 px-2 pt-2">
-                        <div className="w-5 h-5 rounded-full bg-[#5B2D8E]/20 flex items-center justify-center shrink-0">
-                            <span className="text-[7px] font-bold text-[#5B2D8E]">FM</span>
-                        </div>
-                        <div className="min-w-0">
-                            <p className="text-[9px] font-bold text-gray-700 truncate">FM Admin</p>
-                            <p className="text-[8px] text-gray-400 truncate">admin@fe.io</p>
-                        </div>
-                    </div>
-                </div>
+                <SidebarContent />
             </div>
 
             {/* ── Main Content ─────────────────────────────────── */}
             <div className="flex-1 bg-[#F8F8FB] flex flex-col min-w-0">
 
                 {/* Top bar */}
-                <div className="flex items-center justify-between px-4 py-2.5 bg-white border-b border-gray-100 gap-2">
-                    <div className="flex items-center gap-1 text-[10px] text-gray-400">
-                        <span>Pages</span>
-                        <span className="mx-0.5">/</span>
-                        <span className="font-semibold text-gray-700">Dashboard</span>
+                <div className="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-2.5 bg-white border-b border-gray-100 gap-2">
+                    <div className="flex items-center gap-2">
+                        {/* Hamburger — mobile only */}
+                        <button
+                            className="md:hidden text-gray-500 hover:text-gray-700 mr-1"
+                            onClick={() => setSidebarOpen(true)}
+                        >
+                            {IC.menu}
+                        </button>
+                        <div className="flex items-center gap-1 text-[10px] text-gray-400">
+                            <span>Pages</span>
+                            <span className="mx-0.5">/</span>
+                            <span className="font-semibold text-gray-700">Dashboard</span>
+                        </div>
                     </div>
                     <div className="flex items-center gap-2 flex-1 justify-end">
-                        <div className="flex items-center gap-1.5 bg-gray-50 rounded-lg px-2.5 py-1 border border-gray-100 flex-1 max-w-[140px]">
+                        {/* Search — hide on very small, show on sm+ */}
+                        <div className="hidden sm:flex items-center gap-1.5 bg-gray-50 rounded-lg px-2.5 py-1 border border-gray-100 flex-1 max-w-[140px]">
                             {IC.search}
                             <span className="text-[9px] text-gray-300">Search items…</span>
                         </div>
@@ -217,32 +211,33 @@ function FMDashboard() {
                 </div>
 
                 {/* Scrollable body */}
-                <div className="flex-1 overflow-y-auto p-3 space-y-3">
+                <div className="flex-1 overflow-y-auto p-2 sm:p-3 space-y-2 sm:space-y-3">
 
                     {/* Promo banner */}
                     <div
-                        className="rounded-xl px-4 py-3 flex items-center justify-between gap-2"
+                        className="rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 flex items-center justify-between gap-2"
                         style={{ background: "linear-gradient(135deg,#5B2D8E 0%,#7c3aed 100%)" }}
                     >
-                        <div>
+                        <div className="min-w-0">
                             <p className="text-[9px] font-black text-[#7FFFD4] uppercase tracking-widest mb-0.5">
                                 ✦ AI-Powered Insights
                             </p>
-                            <p className="text-[10px] text-white/80 leading-snug">
+                            <p className="text-[10px] text-white/80 leading-snug truncate">
                                 Upgrade to Pro for predictive maintenance &amp; ESG analytics
                             </p>
                         </div>
-                        <button className="shrink-0 bg-white text-[#5B2D8E] text-[9px] font-black px-3 py-1.5 rounded-lg whitespace-nowrap hover:bg-gray-50 transition-colors">
-                            Upgrade Now
+                        <button className="shrink-0 bg-white text-[#5B2D8E] text-[9px] font-black px-2.5 py-1.5 rounded-lg whitespace-nowrap hover:bg-gray-50 transition-colors">
+                            Upgrade
                         </button>
                     </div>
 
                     {/* Overview header */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between flex-wrap gap-1">
                         <span className="text-[12px] font-bold text-gray-800">Overview</span>
-                        <div className="flex items-center gap-2">
-                            <span className="text-[8px] text-gray-400 bg-white border border-gray-100 rounded px-2 py-1">
-                                06 Oct 2025 – 07 Oct 2025
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                            {/* Date range — hidden on tiny screens */}
+                            <span className="hidden sm:inline text-[8px] text-gray-400 bg-white border border-gray-100 rounded px-2 py-1">
+                                06 Oct – 07 Oct 2025
                             </span>
                             <span className="text-[8px] text-gray-400 bg-white border border-gray-100 rounded px-2 py-1">
                                 Last 30 days
@@ -251,10 +246,10 @@ function FMDashboard() {
                         </div>
                     </div>
 
-                    {/* KPI cards */}
-                    <div className="grid grid-cols-4 gap-2">
+                    {/* KPI cards — 2 cols on mobile, 4 cols on sm+ */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         {kpis.map((k) => (
-                            <div key={k.label} className="bg-white rounded-xl p-2.5 border border-gray-100">
+                            <div key={k.label} className="bg-white rounded-xl p-2 sm:p-2.5 border border-gray-100">
                                 <div className="flex items-center justify-between mb-1.5">
                                     <p className="text-[8px] text-gray-400 leading-tight">{k.label}</p>
                                     <span className="text-gray-200">
@@ -263,39 +258,39 @@ function FMDashboard() {
                                         </svg>
                                     </span>
                                 </div>
-                                <p className="text-[15px] font-bold text-gray-900 leading-none mb-1">{k.value}</p>
+                                <p className="text-[14px] sm:text-[15px] font-bold text-gray-900 leading-none mb-1">{k.value}</p>
                                 <p className={`text-[8px] font-semibold ${k.up ? "text-green-500" : "text-red-400"}`}>
                                     {k.change}{" "}
-                                    <span className="text-gray-400 font-normal">from last month</span>
+                                    <span className="text-gray-400 font-normal hidden sm:inline">from last month</span>
                                 </p>
                             </div>
                         ))}
                     </div>
 
-                    {/* Charts */}
-                    <div className="grid grid-cols-5 gap-2">
-                        {/* Bar chart card */}
-                        <div className="col-span-3 bg-white rounded-xl p-3 border border-gray-100">
+                    {/* Charts — stacked on mobile, side-by-side on sm+ */}
+                    <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
+                        {/* Bar chart */}
+                        <div className="sm:col-span-3 bg-white rounded-xl p-3 border border-gray-100">
                             <div className="flex items-start justify-between mb-2">
                                 <div>
                                     <p className="text-[8px] text-gray-400 mb-0.5">Total PPM Tasks</p>
-                                    <p className="text-[14px] font-bold text-gray-900 leading-none">
+                                    <p className="text-[13px] sm:text-[14px] font-bold text-gray-900 leading-none">
                                         1,525{" "}
                                         <span className="text-[8px] text-green-500 font-semibold">+20.1%</span>
                                     </p>
                                     <p className="text-[7px] text-gray-400 mt-0.5">from last month</p>
                                 </div>
-                                <span className="text-[8px] text-gray-400 bg-gray-50 border border-gray-100 rounded px-1.5 py-0.5">
+                                <span className="text-[8px] text-gray-400 bg-gray-50 border border-gray-100 rounded px-1.5 py-0.5 hidden sm:inline">
                                     Last 30 days
                                 </span>
                             </div>
-                            <div style={{ height: "68px" }}><BarChart /></div>
+                            <div style={{ height: "60px" }}><BarChart /></div>
                         </div>
 
-                        {/* Line chart card */}
-                        <div className="col-span-2 bg-white rounded-xl p-3 border border-gray-100">
+                        {/* Line chart */}
+                        <div className="sm:col-span-2 bg-white rounded-xl p-3 border border-gray-100">
                             <p className="text-[8px] text-gray-400 mb-0.5">Compliance Rate</p>
-                            <p className="text-[14px] font-bold text-gray-900 leading-none mb-0.5">
+                            <p className="text-[13px] sm:text-[14px] font-bold text-gray-900 leading-none mb-0.5">
                                 91.4%{" "}
                                 <span className="text-[8px] text-green-500 font-semibold">+5.2%</span>
                             </p>
@@ -307,24 +302,24 @@ function FMDashboard() {
                     {/* Table section */}
                     <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
                         {/* Table header */}
-                        <div className="flex items-center justify-between px-3 pt-3 pb-1">
+                        <div className="flex items-center justify-between px-3 pt-3 pb-1 gap-2 flex-wrap">
                             <span className="text-[11px] font-bold text-gray-800">Recent Work Orders</span>
                             <div className="flex items-center gap-2">
-                                <span className="text-[8px] text-[#5B2D8E] font-semibold cursor-pointer">⊙ View all</span>
-                                <span className="text-[8px] text-gray-400 bg-gray-50 border border-gray-100 rounded px-1.5 py-0.5">
+                                <span className="text-[8px] text-[#5B2D8E] font-semibold cursor-pointer hidden sm:inline">⊙ View all</span>
+                                <span className="text-[8px] text-gray-400 bg-gray-50 border border-gray-100 rounded px-1.5 py-0.5 hidden sm:inline">
                                     Last 30 days
                                 </span>
                                 <span className="text-[8px] text-[#5B2D8E] font-semibold cursor-pointer">↑ Export</span>
                             </div>
                         </div>
 
-                        {/* Tabs */}
-                        <div className="flex gap-0 px-3 border-b border-gray-100">
+                        {/* Tabs — scrollable on mobile */}
+                        <div className="flex gap-0 px-3 border-b border-gray-100 overflow-x-auto scrollbar-none">
                             {TABS.map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
-                                    className="flex items-center gap-1 text-[9px] font-semibold pb-2 pt-1 px-2 whitespace-nowrap transition-colors"
+                                    className="flex items-center gap-1 text-[9px] font-semibold pb-2 pt-1 px-2 whitespace-nowrap transition-colors flex-shrink-0"
                                     style={{
                                         color: activeTab === tab ? "#5B2D8E" : "#9CA3AF",
                                         borderBottom: activeTab === tab ? "2px solid #5B2D8E" : "2px solid transparent",
@@ -338,58 +333,53 @@ function FMDashboard() {
                             ))}
                         </div>
 
-                        {/* Table head */}
-                        <div
-                            className="grid px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-wide border-b border-gray-50"
-                            style={{ gridTemplateColumns: "2fr 1.2fr 1fr 1.2fr 1fr" }}
-                        >
-                            <span>Site Name</span>
-                            <span>Date</span>
-                            <span>Price</span>
-                            <span>Category</span>
-                            <span>Status</span>
-                        </div>
+                        {/* Table — horizontally scrollable on mobile */}
+                        <div className="overflow-x-auto">
+                            {/* Table head */}
+                            <div
+                                className="grid px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-wide border-b border-gray-50 min-w-[340px]"
+                                style={{ gridTemplateColumns: "2fr 1.2fr 1fr 1.2fr 1fr" }}
+                            >
+                                <span>Site Name</span>
+                                <span>Date</span>
+                                <span>Price</span>
+                                <span>Category</span>
+                                <span>Status</span>
+                            </div>
 
-                        {/* Rows */}
-                        {rows.length === 0 ? (
-                            <p className="text-[9px] text-gray-400 text-center py-4">No records</p>
-                        ) : (
-                            rows.map((row, i) => {
-                                const st = STATUS[row.status];
-                                return (
-                                    <div
-                                        key={i}
-                                        className="grid items-center px-3 py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors"
-                                        style={{ gridTemplateColumns: "2fr 1.2fr 1fr 1.2fr 1fr" }}
-                                    >
-                                        <span className="text-[9px] font-semibold text-gray-700 truncate pr-1">
-                                            {row.site}
-                                        </span>
-                                        <span className="text-[9px] text-gray-400">{row.date}</span>
-                                        <span className="text-[9px] text-gray-600 font-medium">$25.00</span>
-                                        <span className="text-[9px] text-gray-500">{row.cat}</span>
-                                        <span
-                                            className="inline-flex items-center gap-1 text-[8px] font-bold rounded-full px-1.5 py-0.5 w-fit"
-                                            style={{ color: st.color, backgroundColor: st.bg }}
+                            {/* Rows */}
+                            {rows.length === 0 ? (
+                                <p className="text-[9px] text-gray-400 text-center py-4">No records</p>
+                            ) : (
+                                rows.map((row, i) => {
+                                    const st = STATUS[row.status];
+                                    return (
+                                        <div
+                                            key={i}
+                                            className="grid items-center px-3 py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors min-w-[340px]"
+                                            style={{ gridTemplateColumns: "2fr 1.2fr 1fr 1.2fr 1fr" }}
                                         >
+                                            <span className="text-[9px] font-semibold text-gray-700 truncate pr-1">{row.site}</span>
+                                            <span className="text-[9px] text-gray-400">{row.date}</span>
+                                            <span className="text-[9px] text-gray-600 font-medium">$25.00</span>
+                                            <span className="text-[9px] text-gray-500">{row.cat}</span>
                                             <span
-                                                className="w-1 h-1 rounded-full shrink-0"
-                                                style={{ backgroundColor: st.color }}
-                                            />
-                                            {row.status}
-                                        </span>
-                                    </div>
-                                );
-                            })
-                        )}
+                                                className="inline-flex items-center gap-1 text-[8px] font-bold rounded-full px-1.5 py-0.5 w-fit"
+                                                style={{ color: st.color, backgroundColor: st.bg }}
+                                            >
+                                                <span className="w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: st.color }} />
+                                                {row.status}
+                                            </span>
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </div>
 
                         {/* Pagination */}
                         <div className="flex justify-end gap-1 px-3 py-2">
                             {["«", "‹", "›", "»"].map((ch) => (
-                                <button
-                                    key={ch}
-                                    className="w-5 h-5 rounded text-[10px] text-gray-400 hover:bg-gray-100 flex items-center justify-center transition-colors"
-                                >
+                                <button key={ch} className="w-5 h-5 rounded text-[10px] text-gray-400 hover:bg-gray-100 flex items-center justify-center transition-colors">
                                     {ch}
                                 </button>
                             ))}
@@ -399,6 +389,60 @@ function FMDashboard() {
                 </div>{/* end scrollable body */}
             </div>{/* end main content */}
         </div>
+    );
+}
+
+/* ── Extracted sidebar content (shared between desktop & drawer) ── */
+function SidebarContent() {
+    return (
+        <>
+            <div>
+                {/* Logo */}
+                <div className="flex items-center gap-1.5 px-2 mb-4">
+                    <div className="w-6 h-6 rounded-lg bg-[#5B2D8E] flex items-center justify-center">
+                        <span className="text-white text-[9px] font-black">FE</span>
+                    </div>
+                    <span className="text-[11px] font-black text-gray-800 tracking-tight">FusionEdge</span>
+                </div>
+
+                {/* Store pill */}
+                <div className="mx-1 mb-3 flex items-center gap-1.5 bg-gray-50 rounded-lg px-2 py-1.5 border border-gray-100">
+                    <div className="w-4 h-4 rounded bg-[#1fa279] flex items-center justify-center">
+                        <span className="text-white text-[7px] font-bold">C</span>
+                    </div>
+                    <span className="text-[9px] font-semibold text-gray-700 flex-1 truncate">Capstone</span>
+                    <span className="text-gray-300 text-[8px]">▾</span>
+                </div>
+
+                <p className="text-[8px] font-bold uppercase tracking-widest text-gray-300 px-2 mb-1">General</p>
+                <NavItem icon={IC.dashboard} label="Dashboard" active />
+                <NavItem icon={IC.assets} label="Assets" />
+                <NavItem icon={IC.tickets} label="Tickets" badge={5} />
+                <NavItem icon={IC.compliance} label="Compliance" />
+                <NavItem icon={IC.esg} label="ESG" />
+
+                <div className="my-2 mx-2 h-px bg-gray-100" />
+                <p className="text-[8px] font-bold uppercase tracking-widest text-gray-300 px-2 mb-1">Tools</p>
+                <NavItem icon={IC.esg} label="Analytics" />
+                <NavItem icon={IC.messages} label="Messages" badge={2} />
+                <NavItem icon={IC.settings} label="Settings" />
+            </div>
+
+            {/* User */}
+            <div>
+                <div className="my-2 mx-2 h-px bg-gray-100" />
+                <NavItem icon={IC.logout} label="Log out" />
+                <div className="flex items-center gap-1.5 px-2 pt-2">
+                    <div className="w-5 h-5 rounded-full bg-[#5B2D8E]/20 flex items-center justify-center shrink-0">
+                        <span className="text-[7px] font-bold text-[#5B2D8E]">FM</span>
+                    </div>
+                    <div className="min-w-0">
+                        <p className="text-[9px] font-bold text-gray-700 truncate">FM Admin</p>
+                        <p className="text-[8px] text-gray-400 truncate">admin@fe.io</p>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }
 
@@ -424,12 +468,12 @@ export default function WhoWeAre() {
         <div style={{ fontFamily: "var(--font-dm-sans,'DM Sans',sans-serif)" }} className="bg-white">
 
             <section className="border-b border-gray-100">
-                <div className="mx-auto max-w-7xl px-6 py-16 lg:py-24">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-14 items-start">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12 sm:py-16 lg:py-24">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-start">
 
                         {/* ── LEFT: copy ─────────────────────────────── */}
                         <div className="lg:sticky lg:top-28">
-                            <div className="flex items-center gap-2 mb-5">
+                            <div className="flex items-center gap-2 mb-4 sm:mb-5">
                                 <span className="h-px w-6 bg-[#1fa279]" />
                                 <span className="text-sm font-bold tracking-wide uppercase text-[#1fa279]">
                                     Who We Are
@@ -437,7 +481,7 @@ export default function WhoWeAre() {
                             </div>
 
                             <h2
-                                className="mt-4 text-3xl font-bold leading-tight tracking-tight sm:text-4xl md:text-5xl mb-6"
+                                className="mt-3 text-3xl font-bold leading-tight tracking-tight sm:text-4xl md:text-5xl mb-5 sm:mb-6"
                                 style={{
                                     color: "#5B2D8E",
                                     fontFamily: "var(--font-dm-serif,'DM Serif Display',serif)",
@@ -458,7 +502,7 @@ export default function WhoWeAre() {
                                 module works independently while sharing a common data layer — enabling organisations to
                                 deploy what they need today and expand seamlessly as priorities evolve.
                             </p>
-                            <p className="text-sm leading-6 text-[#33363c] max-w-[460px] mb-9 md:text-base md:leading-7">
+                            <p className="text-sm leading-6 text-[#33363c] max-w-[460px] mb-8 sm:mb-9 md:text-base md:leading-7">
                                 We serve enterprise clients across corporate campuses, commercial real estate, healthcare
                                 facilities, hospitality, and critical infrastructure — delivering measurable operational
                                 outcomes quickly and without disruption.
@@ -472,7 +516,7 @@ export default function WhoWeAre() {
                                     Request a Demo <ArrowIcon />
                                 </Link>
                                 <Link
-                                    href="/platform"
+                                    href="/about"
                                     className="inline-flex items-center gap-2 px-5 py-[11px] text-gray-700 text-[13px] font-semibold rounded-[6px] border border-gray-200 no-underline transition-all duration-200 hover:border-gray-400 hover:text-gray-900 hover:-translate-y-0.5"
                                 >
                                     Explore the Platform

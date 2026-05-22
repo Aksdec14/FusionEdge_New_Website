@@ -50,7 +50,6 @@
     overflow: hidden;
     min-height: 740px;
 
-    /* ✦ stretch inner to full height so grid can centre */
     display: flex;
     flex-direction: column;
 }
@@ -70,10 +69,13 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: center center;
     opacity: 0.18;
     z-index: 1;
     pointer-events: none;
+    /* GPU-accelerate so the video scales without repaints */
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 /* ── Left dark gradient ─────────────────────────────────── */
@@ -122,7 +124,6 @@
 .heroContentAnim {
     position: relative;
     z-index: 5;
-    /* ✦ grow to fill the flex section so inner can centre */
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -134,11 +135,9 @@
     margin-left: auto;
     margin-right: auto;
     max-width: 80rem;
-    /* 1280px */
     width: 100%;
     padding: 52px 24px;
 
-    /* ✦ grow & centre the grid vertically */
     flex: 1;
     display: flex;
     align-items: center;
@@ -150,7 +149,6 @@
     grid-template-columns: 1fr auto;
     gap: 48px;
     align-items: center;
-    /* ✦ left text & right cards share the same midline */
 }
 
 /* ── Left column ────────────────────────────────────────── */
@@ -366,7 +364,6 @@
         gap: 10px;
     }
 
-    /* Switch card animations to slide-up on tablet */
     .featureCard0 {
         animation-name: featureSlideUp;
     }
@@ -391,15 +388,40 @@
 /* ── Mobile: up to 767px ────────────────────────────────── */
 @media (max-width: 767px) {
     .heroSection {
-        margin-top: 56px !important;
-        min-height: unset !important;
+        margin-top: 56px;
+        /* Keep a solid minimum so the video has height to fill */
+        min-height: 100svh;
+    }
+
+    /*
+     * KEY FIX — video on mobile
+     * The element is already position:absolute / inset:0 so it
+     * inherits the section's height. Two extra rules make sure
+     * portrait phones don't show a sliver of blank background:
+     *   1. object-position: 65% center  — keeps the "action"
+     *      area of the video visible on narrow viewports.
+     *   2. min-height: 100%             — guarantees the video
+     *      is never shorter than its container even when the
+     *      browser UA bar collapses / expands.
+     */
+    .bgVideo {
+        object-position: 65% center;
+        min-height: 100%;
+    }
+
+    /* Heavier left vignette so text stays legible on mobile */
+    .leftGradient {
+        background: linear-gradient(to right,
+                rgba(20, 4, 35, 0.97) 0%,
+                rgba(20, 4, 35, 0.92) 50%,
+                rgba(20, 4, 35, 0.70) 80%,
+                rgba(20, 4, 35, 0.40) 100%);
     }
 
     .heroInner {
-        padding-top: 40px !important;
-        padding-bottom: 40px !important;
-        padding-left: 20px !important;
-        padding-right: 20px !important;
+        padding: 44px 20px 40px;
+        /* Align content to the top rather than centre on short phones */
+        align-items: flex-start;
     }
 
     .heroGrid {
@@ -418,18 +440,107 @@
     }
 
     .diagonalStripe {
-        display: none !important;
+        display: none;
+    }
+
+    /* Slightly reduce card blur cost on low-end phones */
+    .featureCard {
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+    }
+}
+
+/* ── Small phones: 480px – 575px ────────────────────────── */
+@media (max-width: 575px) {
+    .heroSection {
+        min-height: 95svh;
+    }
+
+    /* On narrow portrait phones the video centre is often
+       too far right; pull it back to focus on the subject */
+    .bgVideo {
+        object-position: 55% center;
+    }
+
+    .heroInner {
+        padding: 36px 18px 36px;
+    }
+
+    .ctaRow {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btnGhost,
+    .btnPrimary {
+        justify-content: center;
+        width: 100%;
     }
 }
 
 /* ── Very small phones: up to 479px ─────────────────────── */
 @media (max-width: 479px) {
+    .heroSection {
+        min-height: 92svh;
+    }
+
+    /* Pull subject further left so it doesn't get cropped */
+    .bgVideo {
+        object-position: 50% center;
+    }
+
     .heroInner {
-        padding-left: 16px !important;
-        padding-right: 16px !important;
+        padding: 32px 16px 32px;
     }
 
     .heroCards {
         grid-template-columns: 1fr;
+    }
+
+    /* Slightly larger tap targets on tiny screens */
+    .featureCard {
+        padding: 14px 16px;
+    }
+}
+
+/* ── Landscape phones (short viewport) ──────────────────── */
+@media (max-width: 896px) and (max-height: 500px) and (orientation: landscape) {
+    .heroSection {
+        min-height: unset;
+    }
+
+    /* In landscape the viewport is wide — centre video normally */
+    .bgVideo {
+        object-position: center center;
+    }
+
+    .heroInner {
+        padding: 28px 24px;
+    }
+
+    .heroGrid {
+        grid-template-columns: 1fr auto;
+        gap: 24px;
+        align-items: center;
+    }
+
+    .heroCards {
+        display: flex;
+        flex-direction: column;
+        min-width: 200px;
+        max-width: 220px;
+        gap: 6px;
+    }
+
+    .featureCard {
+        padding: 10px 14px;
+    }
+
+    .featureTitle {
+        font-size: 12px;
+    }
+
+    .featureDesc {
+        font-size: 11px;
     }
 }
