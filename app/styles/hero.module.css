@@ -78,6 +78,29 @@
     transform: translateZ(0);
 }
 
+/* ── Background image (mobile fallback) ─────────────────── */
+/*
+ * Shown only on small screens in place of the video.
+ * Shares the same stacking / sizing rules as .bgVideo.
+ * Opacity is slightly lower (0.13) because the white
+ * architecture image is far brighter than the video —
+ * keeping it subtle lets the dark gradient do its job.
+ */
+.bgImage {
+    display: none;
+    /* hidden on desktop by default  */
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    /* keep upper city skyline in frame */
+    opacity: 0.13;
+    z-index: 1;
+    pointer-events: none;
+}
+
 /* ── Left dark gradient ─────────────────────────────────── */
 .leftGradient {
     position: absolute;
@@ -394,30 +417,20 @@
     }
 
     /*
-     * KEY FIX — video sharpness on mobile
-     *
-     * will-change:transform + translateZ(0) force the video into
-     * a GPU compositing layer. On mobile GPUs this layer is often
-     * rasterized at a lower internal resolution and then upscaled,
-     * producing the "soft / blurry" look.
-     *
-     * Reverting both to their neutral values lets the browser
-     * render the video directly into the main layer at full
-     * device-pixel-ratio sharpness.
-     *
-     * object-position: 65% center  — keeps the focal area of the
-     *   video visible on narrow portrait viewports.
-     * min-height: 100%             — ensures the video never
-     *   shrinks shorter than its container when the UA chrome
-     *   collapses / expands.
+     * Swap: hide the video, show the static image instead.
+     * The image has zero GPU-compositing overhead and stays
+     * perfectly sharp at every device-pixel-ratio.
      */
     .bgVideo {
-        will-change: auto;
-        /* ← disable GPU layer promotion  */
-        transform: none;
-        /* ← remove translateZ(0) hint    */
-        object-position: 65% center;
+        display: none;
+        /* ← video off on mobile          */
+    }
+
+    .bgImage {
+        display: block;
+        /* ← image on on mobile           */
         min-height: 100%;
+        /* never shorter than its container */
     }
 
     /* Heavier left vignette so text stays legible on mobile */

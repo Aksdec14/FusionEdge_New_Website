@@ -1,36 +1,15 @@
 "use client";
 
-/**
- * AssetManagementHero — FOUC-free version
- *
- * What changed vs. the original and WHY:
- *
- * 1. Fonts → next/font/google (was: @import inside <style jsx global>)
- *    next/font preloads fonts at build time and injects them in <head>
- *    before the first paint, so there is never a font-swap flash.
- *
- * 2. All CSS → hero.module.css (was: <style jsx global> in the component)
- *    CSS modules are extracted into a static .css file by Next.js and
- *    linked in <head> synchronously. Styles are present before the JS
- *    bundle even executes, eliminating every layout/animation pop.
- *
- * 3. No more <style> tag in this file at all.
- *    The only remaining runtime styling is the font className wiring,
- *    which next/font handles without any flash.
- */
-
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { DM_Sans, DM_Serif_Display } from "next/font/google";
 import styles from "../styles/hero.module.css";
 
-/* ── Font setup ─────────────────────────────────────────────
-   next/font/google downloads + self-hosts the fonts at build
-   time. No external request at runtime → no layout shift.     */
 const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
-  display: "swap",           // still good UX; font is preloaded anyway
+  display: "swap",
   variable: "--font-dm-sans",
 });
 
@@ -52,14 +31,9 @@ const FEATURES = [
 function ArrowIcon() {
   return (
     <svg
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      width="15" height="15" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor"
+      strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
     >
       <path d="M5 12h14M12 5l7 7-7 7" />
     </svg>
@@ -67,24 +41,37 @@ function ArrowIcon() {
 }
 
 export default function Hero() {
-  /* Attach CSS-variable classes to the root so the font families
-     are available to all descendants via var(--font-dm-sans) etc. */
   const fontVars = `${dmSans.variable} ${dmSerif.variable} ${dmSans.className}`;
 
   return (
     <div className={fontVars}>
       <section className={styles.heroSection}>
 
-        {/* Background video */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className={styles.bgVideo}
-        >
+        {/* Background video — desktop only */}
+        <video autoPlay muted loop playsInline className={styles.bgVideo}>
           <source src="/videos/FusionEdge.mp4" type="video/mp4" />
         </video>
+
+        {/* Background image — mobile only (replaces video on small screens)
+            • fill      → stretches to the nearest positioned ancestor (the
+                          section, which is position:relative), matching the
+                          same inset:0 / width+height:100% behaviour the old
+                          <img> had.
+            • priority  → disables lazy-loading so the image is fetched
+                          immediately, preventing a blank background flash on
+                          first paint on mobile.
+            • quality   → 85 is the Next.js default; lower if the image is
+                          very large and you want faster mobile loads.        */}
+        <Image
+          src="/city-bg.png"
+          alt=""
+          fill
+          priority
+          quality={85}
+          sizes="100vw"
+          className={styles.bgImage}
+          style={{ objectFit: "cover", objectPosition: "center 30%" }}
+        />
 
         {/* Left-side dark gradient */}
         <div aria-hidden="true" className={styles.leftGradient} />
@@ -95,7 +82,7 @@ export default function Hero() {
         {/* Diagonal decorative stripe */}
         <div aria-hidden="true" className={styles.diagonalStripe} />
 
-        {/* Content — animation driven entirely by CSS module */}
+        {/* Content */}
         <div className={styles.heroContentAnim}>
           <div className={styles.heroInner}>
             <div className={styles.heroGrid}>
@@ -103,14 +90,12 @@ export default function Hero() {
               {/* ── LEFT ── */}
               <div className={styles.heroLeft}>
 
-                {/* Badge */}
                 <div className={styles.badge}>
                   <p className={styles.badgeText}>
                     AI-Powered FM-Tech SaaS &nbsp;·&nbsp; Singapore &amp; India
                   </p>
                 </div>
 
-                {/* Headline — uses CSS variable for DM Serif Display */}
                 <h1 className={styles.headline}>
                   Intelligent Facility
                   <br />
@@ -135,7 +120,6 @@ export default function Hero() {
                   Live fast. No disruption to operations. No infrastructure overhead.
                 </p>
 
-                {/* CTAs */}
                 <div className={styles.ctaRow}>
                   <Link href="/about" className={styles.btnGhost}>
                     Explore the Platform <ArrowIcon />
