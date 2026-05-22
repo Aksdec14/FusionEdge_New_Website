@@ -394,17 +394,28 @@
     }
 
     /*
-     * KEY FIX — video on mobile
-     * The element is already position:absolute / inset:0 so it
-     * inherits the section's height. Two extra rules make sure
-     * portrait phones don't show a sliver of blank background:
-     *   1. object-position: 65% center  — keeps the "action"
-     *      area of the video visible on narrow viewports.
-     *   2. min-height: 100%             — guarantees the video
-     *      is never shorter than its container even when the
-     *      browser UA bar collapses / expands.
+     * KEY FIX — video sharpness on mobile
+     *
+     * will-change:transform + translateZ(0) force the video into
+     * a GPU compositing layer. On mobile GPUs this layer is often
+     * rasterized at a lower internal resolution and then upscaled,
+     * producing the "soft / blurry" look.
+     *
+     * Reverting both to their neutral values lets the browser
+     * render the video directly into the main layer at full
+     * device-pixel-ratio sharpness.
+     *
+     * object-position: 65% center  — keeps the focal area of the
+     *   video visible on narrow portrait viewports.
+     * min-height: 100%             — ensures the video never
+     *   shrinks shorter than its container when the UA chrome
+     *   collapses / expands.
      */
     .bgVideo {
+        will-change: auto;
+        /* ← disable GPU layer promotion  */
+        transform: none;
+        /* ← remove translateZ(0) hint    */
         object-position: 65% center;
         min-height: 100%;
     }
