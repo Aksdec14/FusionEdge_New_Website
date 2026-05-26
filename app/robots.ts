@@ -1,4 +1,5 @@
 // app/robots.ts
+export const dynamic = 'force-static'; // <--- THIS IS THE KEY
 import type { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
@@ -6,7 +7,6 @@ export default function robots(): MetadataRoute.Robots {
         rules: {
             userAgent: '*',
             allow: '/',
-            // Add any admin or private paths you don't want indexed here
         },
         sitemap: 'https://www.fusionedge.io/sitemap.xml',
     }
