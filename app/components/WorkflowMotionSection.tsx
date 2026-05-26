@@ -268,7 +268,7 @@ export default function FusionEdgeCarousel() {
                     >
                         One Platform.
                         <br />
-                        <span style={{ color: active.accent }}>Every Module.</span>
+                        <span style={{ color: active.accent }}>Total Coverage.</span>
                     </h1>
                 </div>
 
