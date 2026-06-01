@@ -347,7 +347,7 @@ export default function Footer() {
               <h6 className="footer-col-title">Contact Us</h6>
               <ul className="flex flex-col gap-3 mb-6">
                 <li>
-                  <a href="mailto:info@fusionEdge.com" className="footer-link">info@fusionEdge.com</a>
+                  <a href="mailto:rana@fusionedge.io" className="footer-link">rana@fusionedge.io</a>
                 </li>
                 <li>
                   <a href="tel:+919015122212" className="footer-link">+91-9015122212</a>

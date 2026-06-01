@@ -282,7 +282,7 @@ export default function ContactSection() {
 
                         {/* Contact details */}
                         <ul className="space-y-4 mb-8">
-                            <ContactItem Icon={Mail} label="info@fusionEdge.com" />
+                            <ContactItem Icon={Mail} label="rana@fusionedge.io" />
                             <ContactItem Icon={Phone} label="+91-9015122212" />
                             <ContactItem Icon={MapPin} label="Noida, India" />
                         </ul>
