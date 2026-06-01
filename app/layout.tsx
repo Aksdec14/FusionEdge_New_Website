@@ -82,7 +82,7 @@ export const metadata: Metadata = {
       "Purpose-built for enterprise FM. Asset lifecycle, PPM, smart ticketing, compliance, ESG and more — in one cloud-native, mobile-first platform.",
     images: [
       {
-        url: "/og-image.png",          // place a 1200×630 image in /public
+        url: "/FusionEdge_logo.png",          // place a 1200×630 image in /public
         width: 1200,
         height: 630,
         alt: "FusionEdge — Intelligent Facility Management Platform",
@@ -97,7 +97,7 @@ export const metadata: Metadata = {
     title: "FusionEdge | AI-Powered Facility Management Platform",
     description:
       "Purpose-built for enterprise FM. Asset lifecycle, PPM, smart ticketing, compliance, ESG and more — in one cloud-native, mobile-first platform.",
-    images: ["/og-image.png"],
+    images: ["/FusionEdge_logo.png"],
     site: "@fusionedge_io",
     creator: "@fusionedge_io",
   },
