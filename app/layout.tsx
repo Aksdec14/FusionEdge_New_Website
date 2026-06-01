@@ -128,7 +128,7 @@ export const metadata: Metadata = {
     icon: [
       { url: "/FusionEdge_logo.png" },
       { url: "/FusionEdge_logo.png", type: "image/png" },
-      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/FusionEdge_logo.png", sizes: "96x96", type: "image/png" },
     ],
     apple: "/apple-touch-icon.png",
   },
