@@ -5,7 +5,6 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Chatbot from "./components/Chatbot";
-import ClickDontPrintPopup from "./components/ClickDontPrintPopup";
 
 // ── Fonts ──────────────────────────────────────────────────────────────────
 
@@ -82,7 +81,7 @@ export const metadata: Metadata = {
       "Purpose-built for enterprise FM. Asset lifecycle, PPM, smart ticketing, compliance, ESG and more — in one cloud-native, mobile-first platform.",
     images: [
       {
-        url: "/FusionEdge_logo.png",          // place a 1200×630 image in /public
+        url: "/og-image.png",          // place a 1200×630 image in /public
         width: 1200,
         height: 630,
         alt: "FusionEdge — Intelligent Facility Management Platform",
@@ -97,7 +96,7 @@ export const metadata: Metadata = {
     title: "FusionEdge | AI-Powered Facility Management Platform",
     description:
       "Purpose-built for enterprise FM. Asset lifecycle, PPM, smart ticketing, compliance, ESG and more — in one cloud-native, mobile-first platform.",
-    images: ["/FusionEdge_logo.png"],
+    images: ["/og-image.png"],
     site: "@fusionedge_io",
     creator: "@fusionedge_io",
   },
@@ -126,9 +125,9 @@ export const metadata: Metadata = {
   referrer: "origin-when-cross-origin",
   icons: {
     icon: [
-      { url: "/FusionEdge_logo.png" },
+      { url: "/favicon.ico" },
       { url: "/FusionEdge_logo.png", type: "image/png" },
-      { url: "/FusionEdge_logo.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
     ],
     apple: "/apple-touch-icon.png",
   },
@@ -238,7 +237,6 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Chatbot />
-        <ClickDontPrintPopup />
         <Footer />
 
         {/* Google Analytics */}
