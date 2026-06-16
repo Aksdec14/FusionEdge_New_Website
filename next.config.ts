@@ -3,9 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Static export — required for Plesk file-based hosting
   output: "export",
+  trailingSlash: true, // generates /about/index.html instead of /about.html
 
   images: {
-    unoptimized: true, // next/image optimisation needs a Node server; disable for static export
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -13,10 +14,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-
-  // headers() is intentionally removed.
-  // On a static Plesk/Apache host there is no Next.js server to
-  // apply these rules — all cache headers are set in .htaccess instead.
 };
 
 export default nextConfig;

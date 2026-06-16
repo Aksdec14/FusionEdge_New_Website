@@ -5,7 +5,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Chatbot from "./components/Chatbot";
-import ClickDontPrintPopup from "./components/ClickDontPrintPopup";
+// import ClickDontPrintPopup from "./components/ClickDontPrintPopup";
 
 // ── Fonts ──────────────────────────────────────────────────────────────────
 
@@ -238,7 +238,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Chatbot />
-        <ClickDontPrintPopup />
+        {/* <ClickDontPrintPopup /> */}
         <Footer />
 
         {/* Google Analytics */}
