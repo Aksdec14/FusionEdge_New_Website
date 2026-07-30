@@ -171,8 +171,8 @@ const Contact = () => {
                                     </>
                                 }
                                 label="Visit Us"
-                                title="Noida, Uttar Pradesh"
-                                sub="India"
+                                title="Brigade Tech Park, 2nd floor, Tower B"
+                                sub="Pattandur Agrahara Road, Whitefield, Bengaluru, Karnataka 560066"
                             />
 
                             {/* Social */}

@@ -38,7 +38,7 @@ function Toast({
 }) {
     return (
         <div
-            className="fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl border transition-all duration-500"
+            className="fixed top-4 right-4 left-4 sm:left-auto sm:top-6 sm:right-6 z-50 flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl border transition-all duration-500"
             style={{
                 backgroundColor: success ? "#f0fdf4" : "#fef2f2",
                 borderColor: success ? "#10B981" : "#ef4444",
@@ -70,12 +70,12 @@ const AVATAR_INITIALS = ["AJ", "KR", "ML", "TS", "★"];
 
 function AvatarStack() {
     return (
-        <div className="flex items-center gap-3 mt-10">
+        <div className="flex items-center gap-3 mt-8 sm:mt-10">
             <div className="flex -space-x-2.5">
                 {AVATAR_COLORS.map((bg, i) => (
                     <div
                         key={i}
-                        className="w-9 h-9 rounded-full border-2 border-[#e8e4dc] flex items-center justify-center text-[10px] font-bold text-white"
+                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-[#e8e4dc] flex items-center justify-center text-[10px] font-bold text-white"
                         style={{ backgroundColor: bg, zIndex: AVATAR_COLORS.length - i }}
                     >
                         {AVATAR_INITIALS[i]}
@@ -108,7 +108,7 @@ function ContactItem({
 }) {
     return (
         <li className="flex items-center gap-3 group cursor-pointer">
-            <span className="w-9 h-9 rounded-full flex items-center justify-center bg-[#e2dfd8] border border-[#ccc8be] transition-all duration-200 group-hover:bg-[#5B2D8E] group-hover:border-[#5B2D8E]">
+            <span className="w-9 h-9 shrink-0 rounded-full flex items-center justify-center bg-[#e2dfd8] border border-[#ccc8be] transition-all duration-200 group-hover:bg-[#5B2D8E] group-hover:border-[#5B2D8E]">
                 <Icon
                     size={15}
                     className="text-[#5B2D8E] group-hover:text-white transition-colors duration-200"
@@ -255,28 +255,28 @@ export default function ContactSection() {
 
             <section
                 id="contact"
-                className="min-h-screen bg-[#F9F6EE] flex items-center px-6 py-20"
+                className="min-h-screen bg-[#F9F6EE] flex items-center px-5 sm:px-8 lg:px-6 py-16 sm:py-20"
                 style={{ fontFamily: "'Inter', 'Helvetica Neue', system-ui, sans-serif" }}
             >
-                <div className="max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+                <div className="max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-start">
 
                     {/* ══ LEFT — Headline + Info ══ */}
-                    <div className="lg:pt-4">
+                    <div className="lg:pt-4 w-full">
                         {/* Badge */}
-                        <div className="inline-flex items-center px-4 py-1.5 border border-[#ccc8be] rounded-full bg-[#e2dfd8] text-[13px] text-[#5a5550] font-medium mb-8 tracking-wide">
+                        <div className="inline-flex items-center px-4 py-1.5 border border-[#ccc8be] rounded-full bg-[#e2dfd8] text-[13px] text-[#5a5550] font-medium mb-6 sm:mb-8 tracking-wide">
                             Book a call
                         </div>
 
-                        {/* Big headline — color changed to #5B2D8E */}
+                        {/* Big headline — responsive scale */}
                         <h1
-                            className="text-[68px] font-black leading-[0.95] tracking-[-0.03em] mb-6"
+                            className="text-[40px] sm:text-[52px] lg:text-[60px] xl:text-[68px] font-black leading-[0.95] tracking-[-0.03em] mb-5 sm:mb-6"
                             style={{ color: "#5B2D8E" }}
                         >
                             Let&apos;s get<br />started
                         </h1>
 
                         {/* Sub-copy */}
-                        <p className="text-[17px] text-[#8a8278] leading-relaxed font-normal max-w-[300px] mb-10">
+                        <p className="text-[16px] sm:text-[17px] text-[#8a8278] leading-relaxed font-normal max-w-[320px] mb-8 sm:mb-10">
                             Have a big idea or brand to develop and need help? We&apos;d love to hear from you.
                         </p>
 
@@ -284,7 +284,7 @@ export default function ContactSection() {
                         <ul className="space-y-4 mb-8">
                             <ContactItem Icon={Mail} label="rana@fusionedge.io" />
                             <ContactItem Icon={Phone} label="+91-9015122212" />
-                            <ContactItem Icon={MapPin} label="Noida, India" />
+                            <ContactItem Icon={MapPin} label="Brigade Tech Park, 2nd floor, Tower B, Pattandur Agrahara Road, Whitefield, Bengaluru, Karnataka 560066" />
                         </ul>
 
                         {/* Social links */}
@@ -308,11 +308,11 @@ export default function ContactSection() {
                     </div>
 
                     {/* ══ RIGHT — Form ══ */}
-                    <div>
-                        <form onSubmit={handleSubmit} noValidate className="space-y-7">
+                    <div className="w-full">
+                        <form onSubmit={handleSubmit} noValidate className="space-y-6 sm:space-y-7">
 
                             {/* First + Last name */}
-                            <div className="grid grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div>
                                     <input
                                         type="text"
@@ -348,7 +348,7 @@ export default function ContactSection() {
                             </div>
 
                             {/* Phone + Email */}
-                            <div className="grid grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div>
                                     <input
                                         type="text"
@@ -383,7 +383,7 @@ export default function ContactSection() {
                                 </div>
                             </div>
 
-                            {/* Subject — #5B2D8E for selected state */}
+                            {/* Subject */}
                             <div>
                                 <p className="text-[13px] font-semibold text-[#1a1a1a] uppercase tracking-widest mb-3">
                                     Select Subject
@@ -462,14 +462,14 @@ export default function ContactSection() {
                             {/* Divider */}
                             <div className="h-px bg-[#ccc8c0]" />
 
-                            {/* Submit — color changed to #5B2D8E */}
+                            {/* Submit */}
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
                                 className="
                                     w-full flex items-center justify-center gap-2.5
-                                    text-white text-[16px] font-semibold
-                                    py-5 rounded-full tracking-tight
+                                    text-white text-[15px] sm:text-[16px] font-semibold
+                                    py-4 sm:py-5 rounded-full tracking-tight
                                     active:scale-[0.99]
                                     transition-all duration-150
                                     disabled:opacity-60 disabled:cursor-not-allowed

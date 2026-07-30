@@ -149,8 +149,10 @@ const organizationSchema = {
   numberOfEmployees: { "@type": "QuantitativeValue", minValue: 11, maxValue: 50 },
   address: {
     "@type": "PostalAddress",
-    addressLocality: "Bengaluru East",
+    streetAddress: "Brigade Tech Park, 2nd floor, Tower B, Pattandur Agrahara Road, Whitefield",
+    addressLocality: "Bengaluru",
     addressRegion: "Karnataka",
+    postalCode: "560066",
     addressCountry: "IN",
   },
   contactPoint: {
