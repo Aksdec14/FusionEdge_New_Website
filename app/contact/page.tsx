@@ -312,7 +312,7 @@ const Contact = () => {
                                             Additional Details
                                         </label>
                                         <textarea
-                                            id="message" name="message" rows={5}
+                                            id="message" name="message" rows={5} required
                                             placeholder="Tell us more about your requirements..."
                                             onFocus={handleFocus} onBlur={handleBlur}
                                             className="w-full px-4 py-3 rounded-xl border text-sm outline-none resize-none transition-all duration-300"
