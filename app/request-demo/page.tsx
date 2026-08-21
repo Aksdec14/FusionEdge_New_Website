@@ -1,28 +1,73 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 
 
 
 const RequestDemo = () => {
+    const initialFormState = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        company: "",
+        jobTitle: "",
+        industry: "",
+        employeeCount: "",
+        queryType: "",
+        message: ""
+    };
+
     const [result, setResult] = useState<string>("");
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [currentStep, setCurrentStep] = useState<number>(1);
+    const [values, setValues] = useState(initialFormState);
+    const formRef = useRef<HTMLFormElement>(null);
+
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    ) => {
+        const { name, value } = e.target;
+        setValues((prev) => ({ ...prev, [name]: value }));
+    };
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        // ✅ Strict validation: block submission if ANY field is empty
+        if (Object.values(values).some((v) => v.trim() === "")) {
+            setResult("Please fill in all required fields before submitting.");
+            return;
+        }
+
+        // ✅ Critical fields double-check: never lose email & phone
+        const email = values.email.trim();
+        const phone = values.phone.trim();
+        if (!email || !phone) {
+            setResult("Email and Phone Number are mandatory. Please fill them in.");
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setResult("Please enter a valid email address.");
+            return;
+        }
+
         setIsSubmitting(true);
         setResult("Scheduling your demo...");
 
-        // ✅ FIX: Save form reference BEFORE the async call.
-        // React's synthetic event is pooled — event.currentTarget becomes null
-        // after any await, so we must capture it immediately.
-        const form = event.currentTarget;
-
-        const formData = new FormData(form);
+        // ✅ FIX: Build payload from React state, NOT FormData(form).
+        // Step 1 inputs are unmounted when submitting from Step 2,
+        // so FormData(form) silently drops email, phone, firstName, lastName.
+        const formData = new FormData();
+        Object.entries(values).forEach(([key, value]) => formData.append(key, value));
         formData.append("access_key", "3f951b76-ae31-4fcf-9b95-c6c507352a96");
-        formData.append("subject", "New Demo Request - FusionEdge");
+        // ✅ Contact info duplicated into subject line so it's visible
+        // in the inbox listing even without opening the email.
+        formData.append(
+            "subject",
+            `New Demo Request - ${values.firstName} ${values.lastName} | ${email} | ${phone}`
+        );
 
         try {
             const response = await fetch("https://api.web3forms.com/submit", {
@@ -34,7 +79,7 @@ const RequestDemo = () => {
 
             if (data.success) {
                 setResult("Demo Requested Successfully! Our team will contact you within 24 hours to schedule your personalized demo.");
-                form.reset(); // ✅ Uses saved reference, not event.currentTarget
+                setValues(initialFormState); // ✅ Reset via state (form.reset() can't reach unmounted step-1 fields)
                 setCurrentStep(1);
 
                 // Clear success message after 7 seconds
@@ -52,6 +97,18 @@ const RequestDemo = () => {
     };
 
     const nextStep = () => {
+        // ✅ Strict validation: only advance if all visible fields are valid
+        const form = formRef.current;
+        if (!form) return;
+
+        const fields = form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("input, select, textarea");
+        for (const field of Array.from(fields)) {
+            if (!field.checkValidity()) {
+                field.reportValidity();
+                return;
+            }
+        }
+
         if (currentStep < 2) setCurrentStep(currentStep + 1);
     };
 
@@ -161,7 +218,7 @@ const RequestDemo = () => {
                         </div>
 
                         {/* Form */}
-                        <form onSubmit={onSubmit} className="p-8 lg:p-10">
+                        <form ref={formRef} onSubmit={onSubmit} className="p-8 lg:p-10">
 
                             {/* Step 1: Personal Information */}
                             {currentStep === 1 && (
@@ -184,6 +241,8 @@ const RequestDemo = () => {
                                                 id="firstName"
                                                 name="firstName"
                                                 required
+                                                value={values.firstName}
+                                                onChange={handleChange}
                                                 placeholder="John"
                                                 className="w-full h-12 px-4 rounded-xl border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5D1F73] focus:border-transparent transition-all duration-200"
                                             />
@@ -199,6 +258,8 @@ const RequestDemo = () => {
                                                 id="lastName"
                                                 name="lastName"
                                                 required
+                                                value={values.lastName}
+                                                onChange={handleChange}
                                                 placeholder="Doe"
                                                 className="w-full h-12 px-4 rounded-xl border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5D1F73] focus:border-transparent transition-all duration-200"
                                             />
@@ -215,6 +276,8 @@ const RequestDemo = () => {
                                             id="email"
                                             name="email"
                                             required
+                                            value={values.email}
+                                            onChange={handleChange}
                                             placeholder="john@company.com"
                                             className="w-full h-12 px-4 rounded-xl border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5D1F73] focus:border-transparent transition-all duration-200"
                                         />
@@ -230,6 +293,10 @@ const RequestDemo = () => {
                                             id="phone"
                                             name="phone"
                                             required
+                                            pattern="[0-9+\-\s()]{7,20}"
+                                            title="Enter a valid phone number (7-20 digits, may include +, spaces, dashes)"
+                                            value={values.phone}
+                                            onChange={handleChange}
                                             placeholder="+91 9876543210"
                                             className="w-full h-12 px-4 rounded-xl border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5D1F73] focus:border-transparent transition-all duration-200"
                                         />
@@ -270,6 +337,8 @@ const RequestDemo = () => {
                                             id="company"
                                             name="company"
                                             required
+                                            value={values.company}
+                                            onChange={handleChange}
                                             placeholder="Your Company Ltd."
                                             className="w-full h-12 px-4 rounded-xl border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5D1F73] focus:border-transparent transition-all duration-200"
                                         />
@@ -285,6 +354,8 @@ const RequestDemo = () => {
                                             id="jobTitle"
                                             name="jobTitle"
                                             required
+                                            value={values.jobTitle}
+                                            onChange={handleChange}
                                             placeholder="e.g., Facility Manager, Operations Director"
                                             className="w-full h-12 px-4 rounded-xl border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5D1F73] focus:border-transparent transition-all duration-200"
                                         />
@@ -300,8 +371,9 @@ const RequestDemo = () => {
                                                 id="industry"
                                                 name="industry"
                                                 required
+                                                value={values.industry}
+                                                onChange={handleChange}
                                                 className="w-full h-12 px-4 pr-10 rounded-xl border border-gray-300 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#5D1F73] focus:border-transparent transition-all duration-200 appearance-none cursor-pointer"
-                                                defaultValue=""
                                             >
                                                 <option value="" disabled>Select your industry</option>
                                                 <option value="Construction">Construction</option>
@@ -333,8 +405,9 @@ const RequestDemo = () => {
                                                 id="employeeCount"
                                                 name="employeeCount"
                                                 required
+                                                value={values.employeeCount}
+                                                onChange={handleChange}
                                                 className="w-full h-12 px-4 pr-10 rounded-xl border border-gray-300 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#5D1F73] focus:border-transparent transition-all duration-200 appearance-none cursor-pointer"
-                                                defaultValue=""
                                             >
                                                 <option value="" disabled>Select company size</option>
                                                 <option value="1-50">1-50 employees</option>
@@ -361,8 +434,9 @@ const RequestDemo = () => {
                                                 id="queryType"
                                                 name="queryType"
                                                 required
+                                                value={values.queryType}
+                                                onChange={handleChange}
                                                 className="w-full h-12 px-4 pr-10 rounded-xl border border-gray-300 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#5D1F73] focus:border-transparent transition-all duration-200 appearance-none cursor-pointer"
-                                                defaultValue=""
                                             >
                                                 <option value="" disabled>Select your interest</option>
                                                 <option value="Request a Demo">Request a Demo</option>
@@ -382,13 +456,16 @@ const RequestDemo = () => {
                                     {/* Additional Details */}
                                     <div>
                                         <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                                            Additional Details
+                                            Additional Details <span className="text-red-500">*</span>
                                         </label>
                                         <textarea
                                             id="message"
                                             name="message"
                                             rows={4}
-                                            placeholder="Tell us about your facility management challenges or specific features you'd like to see (optional)..."
+                                            required
+                                            value={values.message}
+                                            onChange={handleChange}
+                                            placeholder="Tell us about your facility management challenges or specific features you'd like to see..."
                                             className="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5D1F73] focus:border-transparent resize-none transition-all duration-200"
                                         ></textarea>
                                     </div>
