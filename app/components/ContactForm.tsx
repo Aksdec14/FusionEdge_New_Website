@@ -285,6 +285,7 @@ export default function ContactSection() {
                             <ContactItem Icon={Mail} label="rana@fusionedge.io" />
                             <ContactItem Icon={Phone} label="+91-9015122212" />
                             <ContactItem Icon={MapPin} label="Brigade Tech Park, 2nd floor, Tower B, Pattandur Agrahara Road, Whitefield, Bengaluru, Karnataka 560066" />
+                            <ContactItem Icon={MapPin} label="3rd Floor, C33, Sector 62, Noida, Uttar Pradesh 201309" />
                         </ul>
 
                         {/* Social links */}

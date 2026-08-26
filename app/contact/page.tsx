@@ -158,7 +158,7 @@ const Contact = () => {
                                 sub="We reply within 24 hours"
                             />
 
-                            {/* Location */}
+                            {/* Location 1 */}
                             <ContactCard
                                 iconBg="#F3EBF5"
                                 iconColor="#5D1F73"
@@ -170,7 +170,24 @@ const Contact = () => {
                                             d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </>
                                 }
-                                label="Visit Us"
+                                label="Visit Us — Noida"
+                                title="3rd Floor, C33, Sector 62"
+                                sub="Noida, Uttar Pradesh 201309"
+                            />
+
+                            {/* Location 2 */}
+                            <ContactCard
+                                iconBg="#F3EBF5"
+                                iconColor="#5D1F73"
+                                icon={
+                                    <>
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </>
+                                }
+                                label="Visit Us — Bengaluru"
                                 title="Brigade Tech Park, 2nd floor, Tower B"
                                 sub="Pattandur Agrahara Road, Whitefield, Bengaluru, Karnataka 560066"
                             />
