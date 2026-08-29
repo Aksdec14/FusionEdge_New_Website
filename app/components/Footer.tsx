@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaFacebookF, FaLinkedinIn } from "react-icons/fa";
+import { FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 // ---------------------------------------------------------------------------
@@ -37,7 +37,7 @@ const COLUMNS = [
 ];
 
 const SOCIALS = [
-  { Icon: FaFacebookF, href: "#", label: "Facebook" },
+  { Icon: FaInstagram, href: "https://www.instagram.com/fusionedgeofficial", label: "Instagram" },
   { Icon: FaLinkedinIn, href: "https://www.linkedin.com/company/fusionedgeservices/", label: "LinkedIn" },
   { Icon: FaXTwitter, href: "#", label: "X Twitter" },
 ];
