@@ -114,7 +114,7 @@ const Contact = () => {
                         {/* ── Left — Heading + Info ── */}
                         <div>
                             <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-3" style={{ color: PURPLE }}>
-                                / get in touch /
+                                 get in touch 
                             </p>
                             <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight mb-3 sm:mb-4" style={{ color: DARK }}>
                                 We are always ready to help you and{" "}
