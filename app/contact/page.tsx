@@ -107,25 +107,25 @@ const Contact = () => {
         body, * { font-family: 'Outfit', system-ui, -apple-system, sans-serif; }
       `}</style>
 
-            <section className="relative bg-white py-12 sm:py-16 md:py-20 lg:py-24">
+            <section className="relative bg-white py-8 sm:py-10 md:py-14 lg:py-16">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-12 lg:gap-16 items-start">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-start">
 
                         {/* ── Left — Heading + Info ── */}
                         <div>
-                            <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-4" style={{ color: PURPLE }}>
+                            <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-3" style={{ color: PURPLE }}>
                                 / get in touch /
                             </p>
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight mb-4 sm:mb-6" style={{ color: DARK }}>
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight mb-3 sm:mb-4" style={{ color: DARK }}>
                                 We are always ready to help you and{" "}
                                 <span style={{ color: PURPLE }}>answer your questions</span>
                             </h1>
-                            <p className="text-sm sm:text-base leading-relaxed mb-8 sm:mb-12 max-w-md" style={{ color: "#6B6B6B" }}>
+                            <p className="text-sm sm:text-base leading-relaxed mb-6 sm:mb-8 max-w-md" style={{ color: "#6B6B6B" }}>
                                 Have questions about FusionEdge? We&apos;re here to help. Reach out to our team
                                 and let&apos;s transform your facility management together.
                             </p>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 sm:gap-x-8 gap-y-8 sm:gap-y-10">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 sm:gap-x-8 gap-y-6 sm:gap-y-8">
                                 <div>
                                     <h4 className="font-semibold mb-3" style={{ color: DARK }}>Call Center</h4>
                                     <p className="text-sm" style={{ color: "#6B6B6B" }}>+91-9015122212</p>
@@ -169,13 +169,13 @@ const Contact = () => {
                         </div>
 
                         {/* ── Right — Form Card ── */}
-                        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 w-full" style={{ background: "#F5F4F2" }}>
-                            <h2 className="text-xl sm:text-2xl font-semibold mb-2" style={{ color: DARK }}>Get in Touch</h2>
-                            <p className="text-xs sm:text-sm mb-6 sm:mb-8" style={{ color: "#6B6B6B" }}>
+                        <div className="rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 w-full" style={{ background: "#F5F4F2" }}>
+                            <h2 className="text-xl sm:text-2xl font-semibold mb-1.5" style={{ color: DARK }}>Get in Touch</h2>
+                            <p className="text-xs sm:text-sm mb-5 sm:mb-6" style={{ color: "#6B6B6B" }}>
                                 Define your goals and identify areas where AI can add value to your business
                             </p>
 
-                            <form onSubmit={onSubmit} className="space-y-5 sm:space-y-7">
+                            <form onSubmit={onSubmit} className="space-y-4 sm:space-y-5">
                                 <div>
                                     <label htmlFor="name" className="sr-only">Full Name</label>
                                     <input
@@ -252,9 +252,7 @@ const Contact = () => {
                                             <option value="" disabled>Subject — how can we help?</option>
                                             <option value="Request a Demo">Request a Demo</option>
                                             <option value="Need Brochure">Need Brochure</option>
-                                            <option value="Collaboration Queries">Collaboration Queries</option>
-                                            <option value="Event Queries">Event Queries</option>
-                                            <option value="Media Queries">Media Queries</option>
+                                            <option value="Connect with the Team">Connect with the Team</option>
                                         </select>
                                         <div className="absolute right-0 bottom-2 pointer-events-none">
                                             <svg className="w-4 h-4" style={{ color: "#9CA3AF" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
