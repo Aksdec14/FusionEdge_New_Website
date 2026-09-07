@@ -107,7 +107,7 @@ const Contact = () => {
         body, * { font-family: 'Outfit', system-ui, -apple-system, sans-serif; }
       `}</style>
 
-            <section className="relative bg-white py-8 sm:py-10 md:py-14 lg:py-16">
+            <section className="relative bg-white py-8 sm:py-10 md:py-14 lg:py-16 mt-12">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-start">
 
