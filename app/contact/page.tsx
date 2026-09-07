@@ -109,7 +109,7 @@ const Contact = () => {
 
             <section className="relative bg-white py-8 sm:py-10 md:py-14 lg:py-16 mt-14">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-14 sm:gap-16 lg:gap-18 items-start">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-14 sm:gap-16 md:gap-20 lg:gap-24 items-start">
 
                         {/* ── Left — Heading + Info ── */}
                         <div>
