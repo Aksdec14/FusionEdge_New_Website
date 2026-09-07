@@ -117,7 +117,8 @@ const Contact = () => {
                                 / get in touch /
                             </p>
                             <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight mb-4 sm:mb-6" style={{ color: DARK }}>
-                                We are always ready to help you and answer your questions
+                                We are always ready to help you and{" "}
+                                <span style={{ color: PURPLE }}>answer your questions</span>
                             </h1>
                             <p className="text-sm sm:text-base leading-relaxed mb-8 sm:mb-12 max-w-md" style={{ color: "#6B6B6B" }}>
                                 Have questions about FusionEdge? We&apos;re here to help. Reach out to our team
@@ -293,12 +294,12 @@ const Contact = () => {
                                     type="submit"
                                     disabled={isSubmitting}
                                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-white font-semibold text-sm transition-all duration-300 hover:scale-105 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
-                                    style={{ background: DARK }}
+                                    style={{ background: PURPLE }}
                                     onMouseEnter={e => {
-                                        if (!isSubmitting) (e.currentTarget as HTMLButtonElement).style.background = PURPLE;
+                                        if (!isSubmitting) (e.currentTarget as HTMLButtonElement).style.background = DARK;
                                     }}
                                     onMouseLeave={e => {
-                                        if (!isSubmitting) (e.currentTarget as HTMLButtonElement).style.background = DARK;
+                                        if (!isSubmitting) (e.currentTarget as HTMLButtonElement).style.background = PURPLE;
                                     }}
                                 >
                                     {isSubmitting ? (
@@ -345,7 +346,7 @@ const SocialBtn = ({ href, children }: { href: string; children: React.ReactNode
     <a
         href={href}
         className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105"
-        style={{ background: DARK, color: "#FFFFFF" }}
+        style={{ background: PURPLE, color: "#FFFFFF" }}
     >
         {children}
     </a>
